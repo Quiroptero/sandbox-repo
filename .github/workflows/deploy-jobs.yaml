@@ -43,28 +43,26 @@ jobs:
         run: python deploy-jobs.py sync_pull_request --commit-tag 'Merge pull request' --pretty-print
       # DEPLOY STG
       - name: deploy-stg
-        if: github.ref == 'STG'
-          if: github.event.pull_request.head.ref == 'DEV'
-            env:
-              DATABRICKS_GITHUB_FROM_BRANCH: ${{github.event.pull_request.head.ref}}
-              DATABRICKS_ENV: "STG"
-            run: python deploy.py display-env DATABRICKS_GITHUB_FROM_BRANCH
-          if: github.event.pull_request.head.ref != 'DEV'
-            env:
-              DATABRICKS_GITHUB_FROM_BRANCH: ${{github.event.pull_request.head.ref}}
-              DATABRICKS_ENV: "STG"
-            run: python deploy.py display-env DATABRICKS_GITHUB_FROM_BRANCH
+        if: github.ref == 'STG' && github.event.pull_request.head.ref == 'DEV'
+          env:
+            DATABRICKS_GITHUB_FROM_BRANCH: ${{github.event.pull_request.head.ref}}
+            DATABRICKS_ENV: "STG"
+          run: python deploy.py display-env DATABRICKS_GITHUB_FROM_BRANCH
+        if: github.ref == 'STG' && github.event.pull_request.head.ref != 'DEV'
+          env:
+            DATABRICKS_GITHUB_FROM_BRANCH: ${{github.event.pull_request.head.ref}}
+            DATABRICKS_ENV: "STG"
+          run: python deploy.py display-env DATABRICKS_GITHUB_FROM_BRANCH
       # DEPLOY PRD
       - name: deploy-prd
-        if: github.ref == 'PRD'
-          if: github.event.pull_request.head.ref == 'STG'
-            env:
-              DATABRICKS_GITHUB_FROM_BRANCH: ${{github.event.pull_request.head.ref}}
-              DATABRICKS_ENV: "PRD"
-            run: python deploy.py display-env DATABRICKS_GITHUB_FROM_BRANCH
-          if: github.event.pull_request.head.ref != 'STG'
-            env:
-              DATABRICKS_GITHUB_FROM_BRANCH: ${{github.event.pull_request.head.ref}}
-              DATABRICKS_ENV: "PRD"
-            run: python deploy.py display-env DATABRICKS_GITHUB_FROM_BRANCH
+        if: github.ref == 'PRD' && github.event.pull_request.head.ref == 'STG'
+          env:
+            DATABRICKS_GITHUB_FROM_BRANCH: ${{github.event.pull_request.head.ref}}
+            DATABRICKS_ENV: "PRD"
+          run: python deploy.py display-env DATABRICKS_GITHUB_FROM_BRANCH
+        if: github.ref == 'PRD' && github.event.pull_request.head.ref != 'STG'
+          env:
+            DATABRICKS_GITHUB_FROM_BRANCH: ${{github.event.pull_request.head.ref}}
+            DATABRICKS_ENV: "PRD"
+          run: python deploy.py display-env DATABRICKS_GITHUB_FROM_BRANCH
 
