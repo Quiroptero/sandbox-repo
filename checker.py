@@ -1,8 +1,12 @@
 import os
 import json
-import fire
 from pathlib import Path
 
+try:
+    import fire
+except ImportError:
+    os.system(f"pip install fire")
+    import fire
 
 def read_file(filepath) -> str:
     with open(filepath, "r") as file:
