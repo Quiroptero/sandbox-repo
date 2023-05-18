@@ -1,0 +1,35 @@
+name: File checker
+
+on:
+  pull_request:
+    paths:
+      - files/**
+
+jobs:
+  build:
+    name: File Checker
+    runs-on: ubuntu-20.04
+
+    steps:
+      # Copy github repo with submodules
+      - name: clone-repo
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+          fetch-depth: 0
+      # Install python
+      - name: install-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8.10'
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v23
+        with:
+          files: |
+            *.json
+            **/*.json
+      # Execute the json specification check command
+      - name: file-checker
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: for file in ${{ steps.changed-files.outputs.all_changed_files }}; do python checker.py json_checker --filepath $file; done
