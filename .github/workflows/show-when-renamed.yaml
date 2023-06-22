@@ -1,0 +1,32 @@
+name: Show when renamed
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  build:
+    name: delete-when-renamed
+    runs-on: ubuntu-20.04
+    steps:
+      - name: clone-repo
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+          fetch-depth: 0
+      - name: install-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8.10"
+      - name: changed-files
+        id: changed-files
+        uses: tj-actions/changed-files@v36.4.1
+        with:
+          output_renamed_files_as_deleted_and_added: true
+      - name: show-renamed-as-deleted
+        run: >
+          for file in ${{ steps.changed-files.outputs.deleted_files }}; do echo $file; done
+      - name: show-renamed-as-added
+        run: >
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do echo $file; done
