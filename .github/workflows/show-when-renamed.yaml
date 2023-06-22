@@ -2,8 +2,8 @@ name: Show when renamed
 
 on:
   pull_request:
-    types:
-      - closed
+    branches:
+      - PRD
 
 jobs:
   build:
